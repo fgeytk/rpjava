@@ -1,13 +1,22 @@
 package rpjava;
 
 import rpjava.model.Guerrier;
-import rpjava.model.Mage;
+import rpjava.model.Monstre;
+import rpjava.model.Plateau;
 
 public class Main {
     public static void main(String[] args) {
+        Plateau plateau = new Plateau();
         Guerrier guerrier = new Guerrier("Arthur");
-        Mage mage = new Mage("Merlin");
+        Monstre monstre = new Monstre("Gobelin", 50, 15, 3);
 
-        guerrier.epee(mage);
+        System.out.println("Distance initiale : " + plateau.distance(guerrier, monstre));
+
+        while (!plateau.estAPortee(guerrier, monstre, 1)) {
+            plateau.deplacerVers(guerrier, monstre);
+            System.out.println("Distance restante : " + plateau.distance(guerrier, monstre));
+        }
+
+        guerrier.epee(monstre, plateau);
     }
 }
