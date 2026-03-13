@@ -19,7 +19,7 @@ public class Mage extends Player {
         }
 
         System.out.println(getNom() + " lance un projectile magique sur " + cible.getNom() + " !");
-        cible.degats(this.getAtq());
+        cible.degats(this.getAtq() + (int)(Math.random() * 6)); // Bonus de 0 a 5 points de degats
     }
 
     public void bouleDeFeu(Personnage cible, Plateau plateau) {
@@ -31,6 +31,6 @@ public class Mage extends Player {
         }
 
         System.out.println(getNom() + " lance une boule de feu sur " + cible.getNom() + " !");
-        cible.degats(this.getAtq());
+        cible.degats(this.getAtq() + (int)(Math.random() * 11)); // Bonus de 0 a 10 points de degats
     }
 }

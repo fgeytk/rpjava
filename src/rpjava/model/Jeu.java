@@ -2,41 +2,49 @@ package rpjava.model;
 
 import java.util.Scanner;
 
-
 public class Jeu {
     private Plateau plateau;
-    private Guerrier guerrier;
+    private Player joueur;
     private Monstre monstre;
+    private Scanner scanner;
 
     public Jeu() {
+        scanner = new Scanner(System.in);
         plateau = new Plateau();
-        guerrier = new Guerrier("Arthur");
+        joueur = creerJoueur();
         monstre = new Monstre("Gobelin", 50, 15, 3);
-        // Positionnement initial
-        System.out.println("Vous vous trouvez dans un donjon sombre. Un " + monstre.getNom() + " apparaît devant vous !");
-        plateau.afficher(guerrier, monstre);
+
+        System.out.println("Vous vous trouvez dans un donjon sombre. Un " + monstre.getNom() + " apparait devant vous !");
+        plateau.afficher(joueur, monstre);
     }
 
-    public void tester() {
-        System.out.println("Distance initiale : " + plateau.distance(guerrier, monstre));
+    private Player creerJoueur() {
+        System.out.println("Choisis ta classe :");
+        System.out.println("1. Guerrier");
+        System.out.println("2. Mage");
 
-        while (!plateau.estAPortee(guerrier, monstre, 1)) {
-            plateau.deplacerVers(guerrier, monstre);
-            System.out.println("Distance restante : " + plateau.distance(guerrier, monstre));
+        String choixClasse = scanner.nextLine();
+
+        System.out.println("Entre le nom du personnage :");
+        String nom = scanner.nextLine().trim();
+        // nom de base
+        if (nom.isEmpty()) {
+            nom = "Arthur";
         }
-
-        guerrier.coupEpee(monstre, plateau);
+        // mage
+        if (choixClasse.equals("2")) {
+            return new Mage(nom);
+        }
+        // Par défaut, on crée un Guerrier
+        return new Guerrier(nom);
     }
 
     public void lancer() {
-        Scanner scanner = new Scanner(System.in);
-
-
-        while (guerrier.estVivant() && monstre.estVivant()) {
+        while (joueur.estVivant() && monstre.estVivant()) {
             System.out.println();
-            System.out.println("HP Guerrier : " + guerrier.getHp());
-            System.out.println("HP Monstre : " + monstre.getHp());
-            plateau.afficher(guerrier, monstre);
+            System.out.println("HP " + joueur.getNom() + " : " + joueur.getHp());
+            System.out.println("Statistique de " + joueur.getNom() + " : Atq = " + joueur.getAtq() + ", Def = " + joueur.getDef());
+            plateau.afficher(joueur, monstre);
 
             System.out.println("Choisis une action :");
             System.out.println("1. Avancer");
@@ -47,25 +55,12 @@ public class Jeu {
             String choix = scanner.nextLine();
 
             if (choix.equals("1")) {
-                plateau.deplacerVers(guerrier, monstre);
+                plateau.deplacerVers(joueur, monstre);
             } else if (choix.equals("2")) {
-                System.out.println("Choisis une attaque :");
-                System.out.println("1. Coup d'epee");
-                System.out.println("2. Arc");
-
-                String choixAttaque = scanner.nextLine();
-
-                if (choixAttaque.equals("1")) {
-                    guerrier.coupEpee(monstre, plateau);
-                } else if (choixAttaque.equals("2")) {
-                    guerrier.arc(monstre, plateau);
-                } else {
-                    System.out.println("Attaque invalide");
-                    continue;
-                }
+                attaquer();
             } else if (choix.equals("3")) {
-                guerrier.buffDefense((int)(1.3 * guerrier.getDef() - guerrier.getDef()));
-                System.out.println(guerrier.getNom() + " se met en defense pour le prochain tour du monstre.");
+                joueur.buffDefense();
+                System.out.println(joueur.getNom() + " se met en defense pour le prochain tour du monstre.");
             } else if (choix.equals("q")) {
                 break;
             } else {
@@ -78,11 +73,50 @@ public class Jeu {
                 break;
             }
 
-            monstre.jouerTour(guerrier, plateau);
+            monstre.jouerTour(joueur, plateau);
 
-            if (!guerrier.estVivant()) {
-                System.out.println(guerrier.getNom() + " est vaincu !");
+            if (!joueur.estVivant()) {
+                System.out.println(joueur.getNom() + " est vaincu !");
                 break;
+            }
+
+            if (joueur.isBuffedDefense()) {
+                joueur.debuffDefense();
+            }
+        }
+    }
+
+    private void attaquer() {
+        if (joueur instanceof Guerrier) {
+            System.out.println("Choisis une attaque :");
+            System.out.println("1. Coup d'epee");
+            System.out.println("2. Arc");
+
+            String choixAttaque = scanner.nextLine();
+
+            if (choixAttaque.equals("1")) {
+                ((Guerrier) joueur).coupEpee(monstre, plateau);
+            } else if (choixAttaque.equals("2")) {
+                ((Guerrier) joueur).arc(monstre, plateau);
+            } else {
+                System.out.println("Attaque invalide");
+            }
+            return;
+        }
+
+        if (joueur instanceof Mage) {
+            System.out.println("Choisis une attaque :");
+            System.out.println("1. Projectile magique");
+            System.out.println("2. Boule de feu");
+
+            String choixAttaque = scanner.nextLine();
+
+            if (choixAttaque.equals("1")) {
+                ((Mage) joueur).projectileMagique(monstre, plateau);
+            } else if (choixAttaque.equals("2")) {
+                ((Mage) joueur).bouleDeFeu(monstre, plateau);
+            } else {
+                System.out.println("Attaque invalide");
             }
         }
     }

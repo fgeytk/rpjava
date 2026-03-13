@@ -16,7 +16,7 @@ public class Guerrier extends Player {
         }
 
         System.out.println(getNom() + " utilise son coup d'epee sur " + cible.getNom() + " !");
-        cible.degats(this.getAtq());
+        cible.degats(this.getAtq() + (int)(Math.random() * 4)); // Bonus de 0 a 3 points de degats
     }
 
     public void arc(Personnage cible, Plateau plateau) {
@@ -28,6 +28,6 @@ public class Guerrier extends Player {
         }
 
         System.out.println(getNom() + " tire une fleche sur " + cible.getNom() + " !");
-        cible.degats(this.getAtq());
+        cible.degats(this.getAtq() + (int)(Math.random() * 6)); // Bonus de 0 a 5 points de degats
     }
 }
