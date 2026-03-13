@@ -33,4 +33,12 @@ public class Mage extends Player {
         System.out.println(getNom() + " lance une boule de feu sur " + cible.getNom() + " !");
         cible.degats(this.getAtq() + (int)(Math.random() * 11)); // Bonus de 0 a 10 points de degats
     }
+    // utilise la classe abstraite Player pour implementer le bonus de niveau de mage et guerrier 
+    @Override
+    protected void bonusNiveau() {
+        this.hp += 10;
+        this.atq += 5;
+        this.def += 30;
+        this.defBase += 30; 
+    }
 }

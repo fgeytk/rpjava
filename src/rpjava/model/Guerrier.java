@@ -30,4 +30,12 @@ public class Guerrier extends Player {
         System.out.println(getNom() + " tire une fleche sur " + cible.getNom() + " !");
         cible.degats(this.getAtq() + (int)(Math.random() * 6)); // Bonus de 0 a 5 points de degats
     }
+
+    @Override
+    protected void bonusNiveau() {
+        this.hp += 40;
+        this.atq += 10;
+        this.def += 3;
+        this.defBase += 3; 
+    }
 }

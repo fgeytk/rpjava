@@ -88,12 +88,13 @@ public class Jeu {
                 continue;
             }
 
+            monstre.jouerTour(joueur, plateau);
+            
             if (!monstre.estVivant()) {
                 System.out.println(monstre.getNom() + " est vaincu !");
+                joueur.gagnerXp(20);
                 monstre = tirerMonstreAleatoire();
             }
-
-            monstre.jouerTour(joueur, plateau);
 
             if (!joueur.estVivant()) {
                 System.out.println(joueur.getNom() + " est vaincu !");
