@@ -42,6 +42,16 @@ public abstract class Personnage {
         return def;
     }
 
+    public void buffDefense(int bonus){
+        this.def += bonus;
+        System.out.println(this.nom + " gagne " + bonus + " points de defense !");
+    }
+
+    public void debuffDefense(int malus){
+        this.def -= malus;
+        System.out.println(this.nom + " perd " + malus + " points de defense !");
+    }
+
     public void degats(int dmg) {
         int degatsSubis = Math.max(0, dmg - this.def);
         this.hp -= degatsSubis;

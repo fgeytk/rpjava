@@ -28,7 +28,9 @@ public class Plateau {
             nouvellePosition--;
         }
 
-        if (positionValide(nouvellePosition)) {
+        if (nouvellePosition == cible.getPosition()) {
+            System.out.println(personnage.getNom() + " est deja au contact de " + cible.getNom() + ".");
+        } else if (positionValide(nouvellePosition)) {
             personnage.setPosition(nouvellePosition);
         }
 

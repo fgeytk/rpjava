@@ -25,11 +25,12 @@ public class Jeu {
             System.out.println("Distance restante : " + plateau.distance(guerrier, monstre));
         }
 
-        guerrier.epee(monstre, plateau);
+        guerrier.coupEpee(monstre, plateau);
     }
 
     public void lancer() {
         Scanner scanner = new Scanner(System.in);
+
 
         while (guerrier.estVivant() && monstre.estVivant()) {
             System.out.println();
@@ -40,6 +41,7 @@ public class Jeu {
             System.out.println("Choisis une action :");
             System.out.println("1. Avancer");
             System.out.println("2. Attaquer");
+            System.out.println("3. Defendre");
             System.out.println("q. Quitter");
 
             String choix = scanner.nextLine();
@@ -47,7 +49,23 @@ public class Jeu {
             if (choix.equals("1")) {
                 plateau.deplacerVers(guerrier, monstre);
             } else if (choix.equals("2")) {
-                guerrier.epee(monstre, plateau);
+                System.out.println("Choisis une attaque :");
+                System.out.println("1. Coup d'epee");
+                System.out.println("2. Arc");
+
+                String choixAttaque = scanner.nextLine();
+
+                if (choixAttaque.equals("1")) {
+                    guerrier.coupEpee(monstre, plateau);
+                } else if (choixAttaque.equals("2")) {
+                    guerrier.arc(monstre, plateau);
+                } else {
+                    System.out.println("Attaque invalide");
+                    continue;
+                }
+            } else if (choix.equals("3")) {
+                guerrier.buffDefense((int)(1.3 * guerrier.getDef() - guerrier.getDef()));
+                System.out.println(guerrier.getNom() + " se met en defense pour le prochain tour du monstre.");
             } else if (choix.equals("q")) {
                 break;
             } else {
