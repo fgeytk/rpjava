@@ -1,6 +1,15 @@
-nom,pv,atq,def
-Rat,10,3,1
-Gobelin,25,4,2
-Loup,50,5,2
-Orc,110,7,3
-Troll,150,9,4
+nom,niveauMin,niveauMax,pv,atq,def
+Rat enrage,1,2,55,12,3
+Chauve-souris vampirique,1,2,60,13,3
+Gobelin veteran,1,3,75,14,4
+Loup noir,2,4,90,15,5
+Squelette champion,2,4,100,16,5
+Bandit d'elite,3,5,115,17,6
+Orc berserker,3,6,135,19,7
+Araignee geante venimeuse,4,6,145,20,7
+Troll des cavernes,5,8,175,22,9
+Ogre de guerre,6,9,190,24,10
+Golem runique,7,10,220,27,12
+Wyverne alpha,8,12,250,30,14
+Dragonnet ecarlate,10,14,290,34,16
+Dragon ancien,12,99,360,40,20

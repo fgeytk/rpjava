@@ -172,6 +172,6 @@ public class Jeu {
     }
 
     private Monstre tirerMonstreAleatoire() {
-        return ParserCSV.tirerMonstreAleatoire(tableMonstres);
+        return ParserCSV.tirerMonstreAleatoire(tableMonstres, joueur.getNiveau());
     }
 }

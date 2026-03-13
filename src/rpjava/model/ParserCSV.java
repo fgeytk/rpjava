@@ -12,7 +12,7 @@ public class ParserCSV {
 
     public static Monstre parseMonstre(String ligne) {
         String[] parties = ligne.split(",");
-        if (parties.length != 4) {
+        if (parties.length != 6) {
             throw new IllegalArgumentException("Ligne de monstre invalide : " + ligne);
         }
 
@@ -21,11 +21,17 @@ public class ParserCSV {
             throw new IllegalArgumentException("Nom de monstre invalide : " + ligne);
         }
 
-        int vie = Integer.parseInt(parties[1].trim());
-        int attaque = Integer.parseInt(parties[2].trim());
-        int defense = Integer.parseInt(parties[3].trim());
+        int niveauMin = Integer.parseInt(parties[1].trim());
+        int niveauMax = Integer.parseInt(parties[2].trim());
+        int vie = Integer.parseInt(parties[3].trim());
+        int attaque = Integer.parseInt(parties[4].trim());
+        int defense = Integer.parseInt(parties[5].trim());
 
-        return new Monstre(nom, vie, attaque, defense);
+        if (niveauMin < 1 || niveauMax < niveauMin) {
+            throw new IllegalArgumentException("Plage de niveaux invalide pour le monstre : " + ligne);
+        }
+
+        return new Monstre(nom, niveauMin, niveauMax, vie, attaque, defense);
     }
 
     public static List<Monstre> chargerMonstres(String cheminFichier) {
@@ -54,16 +60,30 @@ public class ParserCSV {
         return monstres;
     }
 
-    public static Monstre tirerMonstreAleatoire(List<Monstre> monstres) {
+    public static Monstre tirerMonstreAleatoire(List<Monstre> monstres, int niveauJoueur) {
         if (monstres == null || monstres.isEmpty()) {
             throw new IllegalStateException("Aucun monstre disponible pour le tirage.");
         }
 
-        Monstre modele = monstres.get(RANDOM.nextInt(monstres.size()));
+        List<Monstre> monstresDisponibles = new ArrayList<>();
+
+        for (Monstre monstre : monstres) {
+            if (monstre.correspondAuNiveau(niveauJoueur)) {
+                monstresDisponibles.add(monstre);
+            }
+        }
+
+        if (monstresDisponibles.isEmpty()) {
+            throw new IllegalStateException(
+                "Aucun monstre disponible pour le niveau " + niveauJoueur + ". Verifie les plages de niveaux dans monstres.csv."
+            );
+        }
+
+        Monstre modele = monstresDisponibles.get(RANDOM.nextInt(monstresDisponibles.size()));
         return modele.copie();
     }
 
     private static boolean estEntete(String ligne) {
-        return ligne.equalsIgnoreCase("nom,pv,atq,def");
+        return ligne.equalsIgnoreCase("nom,niveaumin,niveaumax,pv,atq,def");
     }
 }

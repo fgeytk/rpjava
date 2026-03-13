@@ -1,13 +1,30 @@
 package rpjava.model;
 
 public class Monstre extends Personnage {
-    public Monstre(String nom, int hp, int atq, int def) {
+    private int niveauMin;
+    private int niveauMax;
+
+    public Monstre(String nom, int niveauMin, int niveauMax, int hp, int atq, int def) {
         super(nom, hp, atq, def);
+        this.niveauMin = niveauMin;
+        this.niveauMax = niveauMax;
         this.position = 9;
     }
 
+    public int getNiveauMin() {
+        return niveauMin;
+    }
+
+    public int getNiveauMax() {
+        return niveauMax;
+    }
+
+    public boolean correspondAuNiveau(int niveauJoueur) {
+        return niveauMin <= niveauJoueur && niveauJoueur <= niveauMax;
+    }
+
     public Monstre copie() {
-        return new Monstre(this.nom, this.hp, this.atq, this.defBase);
+        return new Monstre(this.nom, this.niveauMin, this.niveauMax, this.hp, this.atq, this.defBase);
     }
 
     public void attaquer(Personnage cible) {
