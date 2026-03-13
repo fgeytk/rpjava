@@ -18,5 +18,6 @@ public class Main {
         }
 
         guerrier.epee(monstre, plateau);
+        
     }
 }

@@ -37,4 +37,19 @@ public class Plateau {
             + ". Position actuelle : " + personnage.getPosition()
         );
     }
+
+    public void afficher(Personnage joueur, Personnage monstre) {
+
+    for(int i = 0; i < taille; i++) {
+
+        if(i == joueur.getPosition())
+            System.out.print("J ");
+        else if(i == monstre.getPosition())
+            System.out.print("M ");
+        else
+            System.out.print("_ ");
+    }
+
+    System.out.println();
+    }
 }
