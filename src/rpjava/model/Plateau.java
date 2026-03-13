@@ -43,18 +43,30 @@ public class Plateau {
         this.afficher(personnage, cible);
     }
 
-    public void afficher(Personnage joueur, Personnage monstre) {
+    public void afficher(Personnage premier, Personnage second) {
 
     for(int i = 0; i < taille; i++) {
 
-        if(i == joueur.getPosition())
-            System.out.print("J ");
-        else if(i == monstre.getPosition())
-            System.out.print("M ");
+        if(i == premier.getPosition())
+            System.out.print(symbole(premier) + " ");
+        else if(i == second.getPosition())
+            System.out.print(symbole(second) + " ");
         else
             System.out.print("_ ");
     }
 
     System.out.println();
+    }
+
+    private String symbole(Personnage personnage) {
+        if (personnage instanceof Player) {
+            return "J";
+        }
+
+        if (personnage instanceof Monstre) {
+            return "M";
+        }
+
+        return "?";
     }
 }
