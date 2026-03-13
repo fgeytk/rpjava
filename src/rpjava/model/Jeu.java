@@ -1,5 +1,6 @@
 package rpjava.model;
 
+import java.util.List;
 import java.util.Scanner;
 
 import rpjava.model.exceptions.ActionInvalideException;
@@ -10,13 +11,15 @@ public class Jeu {
     private Plateau plateau;
     private Player joueur;
     private Monstre monstre;
+    private List<Monstre> tableMonstres;
     private Scanner scanner;
 
     public Jeu() {
         scanner = new Scanner(System.in);
         plateau = new Plateau();
         joueur = creerJoueur();
-        monstre = new Monstre("Gobelin", 50, 15, 3);
+        tableMonstres = ParserCSV.chargerMonstres("monstres.csv");
+        monstre = tirerMonstreAleatoire();
 
         System.out.println("Vous vous trouvez dans un donjon sombre. Un " + monstre.getNom() + " apparait devant vous !");
         plateau.afficher(joueur, monstre);
@@ -87,7 +90,7 @@ public class Jeu {
 
             if (!monstre.estVivant()) {
                 System.out.println(monstre.getNom() + " est vaincu !");
-                monstre = new Monstre("Gobelin", 50, 15, 3);
+                monstre = tirerMonstreAleatoire();
             }
 
             monstre.jouerTour(joueur, plateau);
@@ -165,5 +168,9 @@ public class Jeu {
         }
 
         throw new AttaqueInvalideException("Impossible d'attaquer avec cette classe.");
+    }
+
+    private Monstre tirerMonstreAleatoire() {
+        return ParserCSV.tirerMonstreAleatoire(tableMonstres);
     }
 }

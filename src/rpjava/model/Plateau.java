@@ -21,10 +21,12 @@ public class Plateau {
 
     public void deplacerVers(Personnage personnage, Personnage cible) {
         int nouvellePosition = personnage.getPosition();
-
+        //personnage a gauche
         if (personnage.getPosition() < cible.getPosition()) {
             nouvellePosition++;
-        } else if (personnage.getPosition() > cible.getPosition()) {
+        }
+        //personnage a droite 
+        else if (personnage.getPosition() > cible.getPosition()) {
             nouvellePosition--;
         }
 

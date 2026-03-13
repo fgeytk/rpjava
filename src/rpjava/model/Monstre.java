@@ -6,6 +6,10 @@ public class Monstre extends Personnage {
         this.position = 9;
     }
 
+    public Monstre copie() {
+        return new Monstre(this.nom, this.hp, this.atq, this.defBase);
+    }
+
     public void attaquer(Personnage cible) {
         System.out.println(this.getNom() + " attaque " + cible.getNom() + " !");
         cible.degats(this.getAtq());
