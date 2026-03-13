@@ -36,6 +36,9 @@ public class Plateau {
             personnage.getNom() + " avance vers " + cible.getNom()
             + ". Position actuelle : " + personnage.getPosition()
         );
+
+        System.out.println("Plateau :");
+        this.afficher(personnage, cible);
     }
 
     public void afficher(Personnage joueur, Personnage monstre) {

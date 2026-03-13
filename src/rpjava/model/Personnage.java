@@ -22,6 +22,10 @@ public abstract class Personnage {
         this.position = position;
     }
 
+    public boolean estVivant() {
+        return hp > 0;
+    }
+
     public String getNom() {
         return nom;
     }
@@ -43,5 +47,9 @@ public abstract class Personnage {
         this.hp -= degatsSubis;
         System.out.println(this.nom + " subit " + degatsSubis + " points de degats !");
         System.out.println(this.nom + " a maintenant " + this.hp + " points de vie.");
+
+        if (!estVivant()) {
+            System.out.println(this.nom + " est mort !");
+        }
     }
 }
