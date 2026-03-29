@@ -122,15 +122,15 @@ public class Jeu {
         while (!quitter) {
             while (joueur.estVivant() && monstre.estVivant()) {
                 System.out.println();
-                System.out.println("HP " + joueur.getNom() + " : " + joueur.getHp());
-                System.out.println("Statistique de " + joueur.getNom() + " : Atq = " + joueur.getAtq() + ", Def = " + joueur.getDef());
-                System.out.println("HP " + monstre.getNom() + " : " + monstre.getHp());
+                System.out.println(joueur);
+                System.out.println(monstre);
                 plateau.afficher(joueur, monstre);
 
                 System.out.println("Choisis une action :");
                 System.out.println("1. Avancer");
                 System.out.println("2. Attaquer");
                 System.out.println("3. Defendre");
+                System.out.println("4. Inventaire (" + joueur.getInventaire().size() + " objet(s))");
                 System.out.println("q. Quitter");
 
                 String choix = scanner.nextLine();
@@ -152,6 +152,7 @@ public class Jeu {
                 if (!monstre.estVivant()) {
                     System.out.println(monstre.getNom() + " est vaincu !");
                     joueur.gagnerXp(20);
+                    dropObjet();
                     monstre = tirerMonstreAleatoire();
                 }
 
@@ -198,7 +199,12 @@ public class Jeu {
             return;
         }
 
-        throw new ActionInvalideException("Action invalide. Choisis 1, 2, 3 ou q.");
+        if (choix.equals("4")) {
+            ouvrirInventaire();
+            return;
+        }
+
+        throw new ActionInvalideException("Action invalide. Choisis 1, 2, 3, 4 ou q.");
     }
 
     private void attaquer() throws AttaqueInvalideException {
@@ -243,6 +249,41 @@ public class Jeu {
         }
 
         throw new AttaqueInvalideException("Impossible d'attaquer avec cette classe.");
+    }
+
+    private void dropObjet() {
+        if (Math.random() < 0.70) {
+            Objet objet = Objet.genererAleatoire();
+            System.out.println("Le monstre a lache un objet !");
+            joueur.ajouterObjet(objet);
+        }
+    }
+
+    private void ouvrirInventaire() throws ActionInvalideException {
+        List<Objet> inv = joueur.getInventaire();
+        if (inv.isEmpty()) {
+            throw new ActionInvalideException("Inventaire vide.");
+        }
+
+        System.out.println("--- Inventaire ---");
+        for (int i = 0; i < inv.size(); i++) {
+            System.out.println((i + 1) + ". " + inv.get(i));
+        }
+        System.out.println("0. Annuler");
+
+        String choix = scanner.nextLine().trim();
+        if (choix.equals("0")) {
+            throw new ActionInvalideException("Action annulee.");
+        }
+
+        try {
+            int index = Integer.parseInt(choix) - 1;
+            if (!joueur.utiliserObjet(index)) {
+                throw new ActionInvalideException("Choix invalide.");
+            }
+        } catch (NumberFormatException e) {
+            throw new ActionInvalideException("Choix invalide.");
+        }
     }
 
     private Monstre tirerMonstreAleatoire() {

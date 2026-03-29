@@ -81,4 +81,9 @@ public abstract class Personnage {
             System.out.println(this.nom + " est mort !");
         }
     }
+    //nouvelle affichage
+    @Override
+    public String toString() {
+        return nom + "  HP:" + hp + "/" + hpMax + "  ATQ:" + atq + "  DEF:" + def;
+    }
 }
