@@ -37,6 +37,7 @@ public class Mage extends Player {
     @Override
     protected void bonusNiveau() {
         this.hp += 10;
+        this.hpMax += 10;
         this.atq += 5;
         this.def += 30;
         this.defBase += 30; 

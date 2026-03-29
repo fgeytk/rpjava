@@ -4,6 +4,7 @@ public abstract class Personnage {
     protected String nom;
     protected int position = 0;
     protected int hp;
+    protected int hpMax;
     protected int atq;
     protected int def;
     protected int defBase;
@@ -12,6 +13,7 @@ public abstract class Personnage {
     public Personnage(String nom, int hp, int atq, int def) {
         this.nom = nom;
         this.hp = hp;
+        this.hpMax = hp;
         this.atq = atq;
         this.def = def;
         this.defBase = def;
@@ -35,6 +37,10 @@ public abstract class Personnage {
 
     public int getHp() {
         return hp;
+    }
+
+    public int getHpMax() {
+        return hpMax;
     }
 
     public int getAtq() {

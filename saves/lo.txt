@@ -1,0 +1,8 @@
+nom=lo
+classe=GUERRIER
+lv=1
+exp=20
+pvActuels=73
+atq=15
+def=10
+decede=non

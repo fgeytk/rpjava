@@ -17,12 +17,68 @@ public class Jeu {
     public Jeu() {
         scanner = new Scanner(System.in);
         plateau = new Plateau();
-        joueur = creerJoueur();
         tableMonstres = ParserCSV.chargerMonstres("monstres.csv");
-        monstre = tirerMonstreAleatoire();
+        joueur = choisirOuCharger();
+        initialiserCombat();
+    }
 
+    private void initialiserCombat() {
+        monstre = tirerMonstreAleatoire();
         System.out.println("Vous vous trouvez dans un donjon sombre. Un " + monstre.getNom() + " apparait devant vous !");
         plateau.afficher(joueur, monstre);
+    }
+
+    private Player choisirOuCharger() {
+        while (true) {
+            System.out.println("1. Creer un personnage");
+            System.out.println("2. Charger un personnage");
+
+            String choix = scanner.nextLine().trim();
+
+            if (choix.equals("1")) {
+                return creerJoueur();
+            }
+
+            if (choix.equals("2")) {
+                Player charge = chargerJoueur();
+                if (charge != null) {
+                    return charge;
+                }
+                continue;
+            }
+
+            System.out.println("Choix invalide. Tape 1 ou 2.");
+        }
+    }
+
+    private Player chargerJoueur() {
+        List<String> sauvegardes = SauvegardePersonnage.listerSauvegardes();
+        if (!sauvegardes.isEmpty()) {
+            System.out.println("Personnages disponibles :");
+            for (String nom : sauvegardes) {
+                System.out.println("- " + nom);
+            }
+        }
+
+        System.out.println("Nom du personnage a charger :");
+        String nom = scanner.nextLine().trim();
+        if (nom.isEmpty()) {
+            System.out.println("Nom invalide.");
+            return null;
+        }
+
+        Player charge = SauvegardePersonnage.charger(nom);
+        if (charge == null) {
+            System.out.println("Impossible de charger ce personnage.");
+            return null;
+        }
+
+        if (!charge.estVivant()) {
+            System.out.println("Ce personnage est decede.");
+            return null;
+        }
+
+        return charge;
     }
 
     private Player creerJoueur() {
@@ -61,49 +117,67 @@ public class Jeu {
     }
 
     public void lancer() {
-        while (joueur.estVivant() && monstre.estVivant()) {
-            
-            System.out.println();
-            System.out.println("HP " + joueur.getNom() + " : " + joueur.getHp());
-            System.out.println("Statistique de " + joueur.getNom() + " : Atq = " + joueur.getAtq() + ", Def = " + joueur.getDef());
-            System.out.println("HP " + monstre.getNom() + " : " + monstre.getHp());
-            plateau.afficher(joueur, monstre);
+        boolean quitter = false;
 
-            System.out.println("Choisis une action :");
-            System.out.println("1. Avancer");
-            System.out.println("2. Attaquer");
-            System.out.println("3. Defendre");
-            System.out.println("q. Quitter");
+        while (!quitter) {
+            while (joueur.estVivant() && monstre.estVivant()) {
+                System.out.println();
+                System.out.println("HP " + joueur.getNom() + " : " + joueur.getHp());
+                System.out.println("Statistique de " + joueur.getNom() + " : Atq = " + joueur.getAtq() + ", Def = " + joueur.getDef());
+                System.out.println("HP " + monstre.getNom() + " : " + monstre.getHp());
+                plateau.afficher(joueur, monstre);
 
-            String choix = scanner.nextLine();
+                System.out.println("Choisis une action :");
+                System.out.println("1. Avancer");
+                System.out.println("2. Attaquer");
+                System.out.println("3. Defendre");
+                System.out.println("q. Quitter");
 
-            if (choix.equals("q")) {
+                String choix = scanner.nextLine();
+
+                if (choix.equals("q")) {
+                    quitter = true;
+                    break;
+                }
+
+                try {
+                    executerAction(choix);
+                } catch (ActionInvalideException | AttaqueInvalideException e) {
+                    System.out.println(e.getMessage());
+                    continue;
+                }
+
+                monstre.jouerTour(joueur, plateau);
+                
+                if (!monstre.estVivant()) {
+                    System.out.println(monstre.getNom() + " est vaincu !");
+                    joueur.gagnerXp(20);
+                    monstre = tirerMonstreAleatoire();
+                }
+
+                if (joueur.isBuffedDefense()) {
+                    joueur.debuffDefense();
+                }
+            }
+
+            if (quitter) {
+                proposerSauvegarde();
                 break;
-            }
-
-            try {
-                executerAction(choix);
-            } catch (ActionInvalideException | AttaqueInvalideException e) {
-                System.out.println(e.getMessage());
-                continue;
-            }
-
-            monstre.jouerTour(joueur, plateau);
-            
-            if (!monstre.estVivant()) {
-                System.out.println(monstre.getNom() + " est vaincu !");
-                joueur.gagnerXp(20);
-                monstre = tirerMonstreAleatoire();
             }
 
             if (!joueur.estVivant()) {
                 System.out.println(joueur.getNom() + " est vaincu !");
-                break;
+                joueur = choisirOuCharger();
+                initialiserCombat();
             }
+        }
+    }
 
-            if (joueur.isBuffedDefense()) {
-                joueur.debuffDefense();
-            }
+    private void proposerSauvegarde() {
+        System.out.println("Voulez-vous sauvegarder ? (o/n)");
+        String choix = scanner.nextLine().trim().toLowerCase();
+        if (choix.equals("o")) {
+            SauvegardePersonnage.sauvegarder(joueur);
         }
     }
 

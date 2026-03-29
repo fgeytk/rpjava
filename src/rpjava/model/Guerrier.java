@@ -34,6 +34,7 @@ public class Guerrier extends Player {
     @Override
     protected void bonusNiveau() {
         this.hp += 40;
+        this.hpMax += 40;
         this.atq += 10;
         this.def += 3;
         this.defBase += 3; 
